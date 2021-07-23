@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/JanCesenek/my-app/static/css/main.acec1b34.chunk.css",
+    "main.js": "/JanCesenek/my-app/static/js/main.e85702b9.chunk.js",
+    "main.js.map": "/JanCesenek/my-app/static/js/main.e85702b9.chunk.js.map",
+    "runtime-main.js": "/JanCesenek/my-app/static/js/runtime-main.ecbda666.js",
+    "runtime-main.js.map": "/JanCesenek/my-app/static/js/runtime-main.ecbda666.js.map",
+    "static/css/2.bbdd6ee6.chunk.css": "/JanCesenek/my-app/static/css/2.bbdd6ee6.chunk.css",
+    "static/js/2.a1fcf3f2.chunk.js": "/JanCesenek/my-app/static/js/2.a1fcf3f2.chunk.js",
+    "static/js/2.a1fcf3f2.chunk.js.map": "/JanCesenek/my-app/static/js/2.a1fcf3f2.chunk.js.map",
+    "index.html": "/JanCesenek/my-app/index.html",
+    "static/css/2.bbdd6ee6.chunk.css.map": "/JanCesenek/my-app/static/css/2.bbdd6ee6.chunk.css.map",
+    "static/css/main.acec1b34.chunk.css.map": "/JanCesenek/my-app/static/css/main.acec1b34.chunk.css.map",
+    "static/js/2.a1fcf3f2.chunk.js.LICENSE.txt": "/JanCesenek/my-app/static/js/2.a1fcf3f2.chunk.js.LICENSE.txt",
+    "static/media/font-awesome.css": "/JanCesenek/my-app/static/media/fontawesome-webfont.f691f37e.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ecbda666.js",
+    "static/css/2.bbdd6ee6.chunk.css",
+    "static/js/2.a1fcf3f2.chunk.js",
+    "static/css/main.acec1b34.chunk.css",
+    "static/js/main.e85702b9.chunk.js"
+  ]
+}
