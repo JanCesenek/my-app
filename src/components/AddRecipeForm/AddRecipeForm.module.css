@@ -1,0 +1,107 @@
+.Hidden {
+  display: none !important;
+}
+
+.FormBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.FormContent {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  z-index: 1000;
+  width: 70%;
+  border: 1px solid grey;
+  border-radius: 1rem;
+  background-color: white;
+  display: grid;
+  grid-template-rows: 10rem 20rem 10rem;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.FormContent > * {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.TitleArea {
+  grid-row: 1 / 2;
+  grid-column: 2 / 3;
+}
+
+.TitleArea input {
+  margin-top: 2rem;
+}
+
+.BasicData {
+  grid-row: 2 / 3;
+  grid-column: 1 / 2;
+}
+
+.BasicData input {
+  margin-bottom: 2rem;
+}
+
+.Ingredients {
+  grid-row: 2 / 3;
+  grid-column: 2 / 3;
+}
+
+.Ingredients button {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.Directions {
+  grid-row: 2 / -1;
+  grid-column: 3 / -1;
+}
+
+.Submit {
+  grid-column: 2 / 3;
+  grid-row: 3 / -1;
+  justify-self: center;
+  align-self: center;
+  background-color: green;
+  color: white;
+}
+
+.IngredientHolder {
+  width: 10rem;
+  height: 2rem;
+  background-color: black;
+  border-radius: 1px;
+}
+
+.Exit {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background-color: transparent;
+  border: none;
+  width: 5rem;
+  height: 5rem;
+}
+
+.Cross {
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+}
+
+input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -1,0 +1,61 @@
+import React, { useEffect, useState } from 'react';
+
+import { RecipeList } from '../components/RecipeList';
+import { RecipeFilter } from '../components/RecipeFilter';
+import AddRecipeForm from '../components/AddRecipeForm/AddRecipeForm';
+import { api } from '../api';
+
+import classes from './RecipeListPage.module.css';
+
+export function RecipeListPage() {
+  const [{ data, error, loading }, setRecipeList] = useState({
+    data: [],
+    error: '',
+    loading: true,
+  });
+  const [recipe, setRecipe] = useState('');
+  const [formIsVisible, setFormIsVisible] = useState(false);
+
+  const filteredRecipes = data.filter(({ title }) =>
+    title.toLowerCase().includes(recipe.toLowerCase()),
+  );
+
+  useEffect(() => {
+    api
+      .get('/recipes')
+      .then(({ data }) => {
+        console.log(data);
+        setRecipeList({ data, error: '', loading: false });
+      })
+      .catch(() => {
+        setRecipeList({ data: [], error: 'Něco se pokazilo...', loading: false });
+      });
+  }, []);
+
+  if (loading) {
+    return 'Loading...';
+  }
+
+  if (!!error) {
+    return error;
+  }
+
+  const changeFormVisibility = () => {
+    if (!formIsVisible) setFormIsVisible(true);
+    else setFormIsVisible(false);
+  };
+
+  return (
+    <>
+      <h1>Recepty</h1>
+      <div className={classes.Center}>
+        <button className={classes.Button} onClick={changeFormVisibility}>
+          &#10010; Přidat recept
+        </button>
+      </div>
+      <AddRecipeForm hidden={!formIsVisible} changeFormVisibility={changeFormVisibility} />
+      <RecipeFilter recipe={recipe} setRecipe={setRecipe} />
+      <RecipeList recipes={filteredRecipes} />
+    </>
+  );
+}

@@ -1,0 +1,23 @@
+.Title {
+  font-size: 3rem;
+}
+
+h1 {
+  margin-bottom: 3rem;
+  text-decoration: underline;
+  font-weight: 900;
+}
+
+span {
+  margin: 5rem 0;
+}
+
+h1,
+h2,
+h3 {
+  text-align: center;
+}
+
+li {
+  list-style: square;
+}
