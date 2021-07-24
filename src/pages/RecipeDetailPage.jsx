@@ -7,6 +7,8 @@ import UseInput from '../hooks/use-input';
 import { api } from '../api';
 
 export function RecipeDetailPage() {
+  /* IMPORTED HOOKS */
+  /* ------------------------------------------- */
   /* Title */
   const {
     value: enteredTitle,
@@ -80,6 +82,7 @@ export function RecipeDetailPage() {
     blurHandler: directionsBlurHandler,
     reset: resetDirections,
   } = UseInput((value) => value.trim() !== '');
+  /* ---------------------------------------------- */
   const { slug } = useParams();
   const [{ data, error, loading }, setRecipeDetails] = useState({
     data: {},
@@ -122,13 +125,13 @@ export function RecipeDetailPage() {
   if (!!error) {
     return error;
   }
-
+  /* data to be sent to the database for the edited recipe (desperate attempt - unsure how to combine current recipe data with the ones that user edits 🤨) */
   const postRequestPayLoad = {
-    title: enteredTitle,
-    preparationTime: enteredPrepTime,
-    servingCount: enteredPortions,
-    directions: enteredDirections,
-    ingredients: ingredients,
+    title: data.Title + enteredTitle,
+    preparationTime: data.preparationTime + enteredPrepTime,
+    servingCount: data.servingCount + enteredPortions,
+    directions: data.directions + enteredDirections,
+    ingredients: data.ingredients + ingredients,
     slug,
     lastModifiedDate: new Date(),
   };
@@ -139,7 +142,7 @@ export function RecipeDetailPage() {
     amountUnit: enteredIngUnit,
     isGroup: false,
   };
-
+  /* reset input values */
   const hardReset = function () {
     resetTitle();
     resetPrepTime();
@@ -147,13 +150,19 @@ export function RecipeDetailPage() {
     resetSideDish();
     resetDirections();
   };
-
+  /* reset input values for ingredients */
   const ingReset = function () {
     resetIngAmount();
     resetIngUnit();
     resetIngName();
   };
-
+  /* clear the whole form */
+  const completeReset = () => {
+    hardReset();
+    ingReset();
+    setIngredients([]);
+  };
+  /* submit a PUT request - add edited recipe to the database (however doesn't really work as intended... 😞) */
   const editRecipeHandler = (event) => {
     event.preventDefault();
     api
@@ -166,7 +175,7 @@ export function RecipeDetailPage() {
         console.log(error);
       });
   };
-
+  /* submit a DELETE request - delete selected recipe from the database */
   const deleteRecipeHandler = (event) => {
     if (window.confirm('Opravdu smazat recept? 🤨')) {
       api
@@ -181,18 +190,12 @@ export function RecipeDetailPage() {
       alert('Recept úspěšně odstraněn 😉');
     } else event.preventDefault();
   };
-
+  /* pushes submitted ingredient into a <div> which displays all ingredients */
   const pushIngredient = () => {
     setIngredients((prevState) => [...prevState, singleIng]);
     ingReset();
   };
-
-  const completeReset = () => {
-    hardReset();
-    ingReset();
-    setIngredients([]);
-  };
-
+  /* displays or hides a popup window with the form for adding a recipe */
   const changeFormVisibility = (event) => {
     if (isHidden) setIsHidden(false);
     else {
@@ -205,7 +208,7 @@ export function RecipeDetailPage() {
       }
     }
   };
-
+  /* function for removing submitted ingredients from a <div> (this one doesn't work as intented, encountered a problem with mixing data...) */
   const removeIngredient = function (i) {
     const newIngredients = [...data.ingredients];
     newIngredients.splice(i, 1);
@@ -215,8 +218,7 @@ export function RecipeDetailPage() {
   const transformedDirections = data.directions?.split('\n');
 
   const invalidIngredients = !validIngAmount || !validIngName || !validIngUnit;
-  const invalidForm = !validTitle || !validPrepTime || !validDirections;
-
+  /* basically duplicated <AddRecipeForm /> - probably could've been a lot cleaner, but I'm not advanced enough at this point */
   const editForm = (
     <div className={`${classes2.FormBackground} ${isHidden ? classes2.Hidden : ''}`}>
       <form id="form1" className={classes2.FormContent} onSubmit={editRecipeHandler}>
@@ -322,7 +324,7 @@ export function RecipeDetailPage() {
           {directionsHasError && <p className="error-text">Vyplňte postup!</p>}
         </div>
         {/* submit button */}
-        <button type="submit" disabled={invalidForm} className={classes2.Submit}>
+        <button type="submit" className={classes2.Submit}>
           &#9745; Uložit
         </button>
         {/* exit sign that closes the form without saving */}
@@ -355,7 +357,9 @@ export function RecipeDetailPage() {
           return <p>{dir}</p>;
         })}
       </div>
-      <button onClick={changeFormVisibility}>Upravit &#10000;</button>
+      <button style={{ marginRight: '1rem' }} onClick={changeFormVisibility}>
+        Upravit &#10000;
+      </button>
       <button onClick={deleteRecipeHandler}>
         <a href="/">Smazat &#10005;</a>
       </button>

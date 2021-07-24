@@ -5,6 +5,8 @@ import { api } from '../../api';
 import slugify from 'react-slugify';
 
 const AddRecipeForm = (props) => {
+  /* IMPORTED HOOKS */
+  /* ----------------------------------------------------- */
   /* Title */
   const {
     value: enteredTitle,
@@ -78,9 +80,10 @@ const AddRecipeForm = (props) => {
     blurHandler: directionsBlurHandler,
     reset: resetDirections,
   } = UseInput((value) => value.trim() !== '');
+  /* ------------------------------------------------------------ */
 
   const [ingredients, setIngredients] = useState([]);
-
+  /* reset input values */
   const hardReset = function () {
     resetTitle();
     resetPrepTime();
@@ -88,13 +91,13 @@ const AddRecipeForm = (props) => {
     resetSideDish();
     resetDirections();
   };
-
+  /* reset input values in ingredients field */
   const ingReset = function () {
     resetIngAmount();
     resetIngUnit();
     resetIngName();
   };
-
+  /* clear the whole form */
   const completeReset = () => {
     hardReset();
     ingReset();
@@ -123,7 +126,7 @@ const AddRecipeForm = (props) => {
     setIngredients((prevState) => [...prevState, singleIng]);
     ingReset();
   };
-
+  /* submit a POST request - add a recipe to the database */
   const addRecipeHandler = (event) => {
     event.preventDefault();
     console.log(postRequestPayLoad);
@@ -140,12 +143,12 @@ const AddRecipeForm = (props) => {
     completeReset();
     props.formUploaded();
   };
-
+  /* exit form for adding ingredients */
   const exitForm = () => {
     completeReset();
     props.changeFormVisibility();
   };
-
+  /* remove an ingredient from an ingredient holder */
   const removeIngredient = function (i) {
     const newIngredients = [...ingredients];
     newIngredients.splice(i, 1);

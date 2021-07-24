@@ -53,7 +53,7 @@ export function RecipeListPage() {
   if (!!error) {
     return error;
   }
-
+  /* displays or hides a popup window with the form for adding a recipe */
   const changeFormVisibility = (event) => {
     if (!formIsVisible) setFormIsVisible(true);
     else {
@@ -63,10 +63,6 @@ export function RecipeListPage() {
         setFormIsVisible(true);
       }
     }
-  };
-
-  const formUploaded = () => {
-    setFormIsVisible(false);
   };
 
   return (
@@ -80,7 +76,7 @@ export function RecipeListPage() {
       <AddRecipeForm
         hidden={!formIsVisible}
         changeFormVisibility={changeFormVisibility}
-        formUploaded={formUploaded}
+        formUploaded={() => setFormIsVisible(false)}
       />
       <RecipeFilter recipe={recipe} setRecipe={setRecipe} />
       <RecipeList recipes={filteredRecipes} />
