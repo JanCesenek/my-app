@@ -38,3 +38,54 @@ button:disabled:hover {
 .error-text {
   color: #b40e0e;
 }
+
+.colour-error {
+  color: yellow;
+  font-size: 10rem;
+}
+
+@keyframes zoomInOut {
+  0% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(2);
+  }
+
+  50% {
+    transform: scale(0.5);
+  }
+
+  75% {
+    transform: scale(2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.error-animation {
+  animation: zoomInOut 2s infinite ease;
+}
+
+@keyframes spinningHourglass {
+  0% {
+    transform: rotate(0);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinning-hourglass {
+  font-size: 10rem;
+  text-align: center;
+  animation: spinningHourglass 1s infinite ease;
+}

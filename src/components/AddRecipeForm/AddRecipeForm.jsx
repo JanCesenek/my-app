@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import UseInput from '../../hooks/use-input';
 import classes from './AddRecipeForm.module.css';
 import { api } from '../../api';
@@ -96,7 +96,7 @@ const AddRecipeForm = (props) => {
   };
 
   const slug = slugify(enteredTitle);
-
+  /** */
   const postRequestPayLoad = {
     title: enteredTitle,
     preparationTime: enteredPrepTime,
@@ -106,7 +106,7 @@ const AddRecipeForm = (props) => {
     slug,
     lastModifiedDate: new Date(),
   };
-
+  /* default ingredient object */
   const singleIng = {
     name: enteredIngName,
     amount: enteredIngAmount,
@@ -121,15 +121,14 @@ const AddRecipeForm = (props) => {
   const fetchNewRecipe = () => {
     const addRecipePayLoad = JSON.stringify(postRequestPayLoad);
     console.log(addRecipePayLoad);
-    hardReset();
-    // api
-    //   .post(`/recipes/${slug}`, addRecipePayLoad)
-    //   .then(() => {
-    //     console.log('Recipe successfully added!');
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    api
+      .post('/recipes', addRecipePayLoad)
+      .then(() => {
+        console.log('Recipe successfully added!');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const invalidIngredients = !validIngAmount || !validIngName || !validIngUnit;
@@ -137,7 +136,7 @@ const AddRecipeForm = (props) => {
 
   return (
     <div className={`${classes.FormBackground} ${props.hidden ? classes.Hidden : ''}`}>
-      <form id="form1" className={classes.FormContent}>
+      <form id="form1" className={classes.FormContent} onSubmit={fetchNewRecipe}>
         {/* recipe name */}
         <div className={`${titleHasError && 'invalid'} ${classes.TitleArea}`}>
           <h2>{enteredTitle.trim() === '' ? 'Napište název receptu' : enteredTitle}</h2>
@@ -241,11 +240,10 @@ const AddRecipeForm = (props) => {
         </div>
         {/* submit button */}
         <input
-          type="button"
+          type="submit"
           value="&#9745; Uložit"
           disabled={invalidForm}
           className={classes.Submit}
-          onClick={fetchNewRecipe}
         />
         {/* exit sign that closes the form without saving */}
         <button className={classes.Exit} onClick={props.changeFormVisibility}>

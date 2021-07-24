@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import classes from './RecipeDetailPage.module.css';
+import AddRecipeForm from '../components/AddRecipeForm/AddRecipeForm';
 
 import { api } from '../api';
 
@@ -23,9 +24,10 @@ export function RecipeDetailPage() {
         setRecipeDetails({
           data: {},
           error: (
-            <p className={classes.ColourError}>
-              Error! <span classes={classes.ErrorAnimation}>&#9888;</span>
-            </p>
+            <>
+              <p className="colour-error">Error!</p>{' '}
+              <span className="error-animation">&#9888;</span>
+            </>
           ),
           loading: false,
         });
@@ -34,22 +36,25 @@ export function RecipeDetailPage() {
   }, [slug, data.directions]);
 
   if (loading) {
-    return 'Loading...';
+    return <p>&#8987;</p>;
   }
 
   if (!!error) {
     return error;
   }
 
-  const deleteRecipeHandler = () => {
-    api
-      .delete(`/recipes/${slug}`)
-      .then(() => {
-        console.log('Success!!!');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const deleteRecipeHandler = (event) => {
+    if (window.confirm('Opravdu smazat recept? 🤨')) {
+      api
+        .delete(`/recipes/${data._id}`)
+        .then(() => {
+          console.log('Success!!!');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      alert('Recept úspěšně odstraněn 😉');
+    } else event.preventDefault();
   };
 
   const transformedDirections = data.directions?.split('\n');
@@ -77,7 +82,9 @@ export function RecipeDetailPage() {
         })}
       </div>
       <button>Upravit &#10000;</button>
-      <button onClick={deleteRecipeHandler}>Smazat &#10005;</button>
+      <button onClick={deleteRecipeHandler}>
+        <a href="/">Smazat &#10005;</a>
+      </button>
     </>
   );
 }

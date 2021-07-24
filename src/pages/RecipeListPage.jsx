@@ -28,12 +28,26 @@ export function RecipeListPage() {
         setRecipeList({ data, error: '', loading: false });
       })
       .catch(() => {
-        setRecipeList({ data: [], error: 'Něco se pokazilo...', loading: false });
+        setRecipeList({
+          data: [],
+          error: (
+            <div className={classes.Center}>
+              <p className="colour-error">
+                Error! <span className="error-animation">&#9888;</span>
+              </p>
+            </div>
+          ),
+          loading: false,
+        });
       });
   }, []);
 
   if (loading) {
-    return 'Loading...';
+    return (
+      <div className={classes.Center}>
+        <p className="spinning-hourglass">&#8987;</p>
+      </div>
+    );
   }
 
   if (!!error) {
