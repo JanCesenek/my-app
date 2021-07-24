@@ -23,7 +23,7 @@
   border-radius: 1rem;
   background-color: white;
   display: grid;
-  grid-template-rows: 10rem 20rem 10rem;
+  grid-template-rows: 10rem 20rem 20rem;
   grid-template-columns: 1fr 1fr 1fr;
   justify-items: center;
   padding: 1rem;
@@ -48,10 +48,20 @@
 .BasicData {
   grid-row: 2 / 3;
   grid-column: 1 / 2;
+  margin-top: -5rem;
 }
 
 .BasicData input {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+}
+
+.IngredientsHolder {
+  grid-row: 3 / -1;
+  grid-column: 1 / 2;
+}
+
+.IngredientsHolder span:hover {
+  cursor: pointer;
 }
 
 .Ingredients {

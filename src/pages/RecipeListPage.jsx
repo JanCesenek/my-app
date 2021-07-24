@@ -40,9 +40,19 @@ export function RecipeListPage() {
     return error;
   }
 
-  const changeFormVisibility = () => {
+  const changeFormVisibility = (event) => {
     if (!formIsVisible) setFormIsVisible(true);
-    else setFormIsVisible(false);
+    else {
+      if (window.confirm('Opravdu chcete zahodit neuložené změny? 🤔')) setFormIsVisible(false);
+      else {
+        event.preventDefault();
+        setFormIsVisible(true);
+      }
+    }
+  };
+
+  const formUploaded = () => {
+    setFormIsVisible(false);
   };
 
   return (
@@ -53,7 +63,11 @@ export function RecipeListPage() {
           &#10010; Přidat recept
         </button>
       </div>
-      <AddRecipeForm hidden={!formIsVisible} changeFormVisibility={changeFormVisibility} />
+      <AddRecipeForm
+        hidden={!formIsVisible}
+        changeFormVisibility={changeFormVisibility}
+        formUploaded={formUploaded}
+      />
       <RecipeFilter recipe={recipe} setRecipe={setRecipe} />
       <RecipeList recipes={filteredRecipes} />
     </>

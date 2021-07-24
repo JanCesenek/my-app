@@ -21,3 +21,33 @@ h3 {
 li {
   list-style: square;
 }
+
+.ColourError {
+  color: yellow;
+}
+
+@keyframes zoomInOut {
+  0% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(2);
+  }
+
+  50% {
+    transform: scale(0.5);
+  }
+
+  75% {
+    transform: scale(2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.ErrorAnimation {
+  animation: zoomInOut infinite;
+}

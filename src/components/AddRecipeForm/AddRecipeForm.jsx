@@ -28,7 +28,6 @@ const AddRecipeForm = (props) => {
   /* Number of portions */
   const {
     value: enteredPortions,
-    isValid: validPortions,
     hasError: portionsHasError,
     changeHandler: portionsChangeHandler,
     blurHandler: portionsBlurHandler,
@@ -38,8 +37,6 @@ const AddRecipeForm = (props) => {
   /* Side dish */
   const {
     value: enteredSideDish,
-    isValid: validSideDish,
-    hasError: sideDishHasError,
     changeHandler: sideDishChangeHandler,
     blurHandler: sideDishBlurHandler,
     reset: resetSideDish,
@@ -49,7 +46,6 @@ const AddRecipeForm = (props) => {
   const {
     value: enteredIngAmount,
     isValid: validIngAmount,
-    hasError: ingAmountHasError,
     changeHandler: ingAmountChangeHandler,
     blurHandler: ingAmountBlurHandler,
     reset: resetIngAmount,
@@ -59,7 +55,6 @@ const AddRecipeForm = (props) => {
   const {
     value: enteredIngUnit,
     isValid: validIngUnit,
-    hasError: ingUnitHasError,
     changeHandler: ingUnitChangeHandler,
     blurHandler: ingUnitBlurHandler,
     reset: resetIngUnit,
@@ -69,7 +64,6 @@ const AddRecipeForm = (props) => {
   const {
     value: enteredIngName,
     isValid: validIngName,
-    hasError: ingNameHasError,
     changeHandler: ingNameChangeHandler,
     blurHandler: ingNameBlurHandler,
     reset: resetIngName,
@@ -85,8 +79,7 @@ const AddRecipeForm = (props) => {
     reset: resetDirections,
   } = UseInput((value) => value.trim() !== '');
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [ingredients, setIngredients] = useState([]);
 
   const hardReset = function () {
     resetTitle();
@@ -96,6 +89,12 @@ const AddRecipeForm = (props) => {
     resetDirections();
   };
 
+  const ingReset = function () {
+    resetIngAmount();
+    resetIngUnit();
+    resetIngName();
+  };
+
   const slug = slugify(enteredTitle);
 
   const postRequestPayLoad = {
@@ -103,35 +102,43 @@ const AddRecipeForm = (props) => {
     preparationTime: enteredPrepTime,
     servingCount: enteredPortions,
     directions: enteredDirections,
-    ingredients: [],
+    ingredients: ingredients,
     slug,
     lastModifiedDate: new Date(),
   };
 
-  const fetchNewRecipe = () => {
-    const stringifiedNewPayLoad = JSON.stringify(postRequestPayLoad);
-    console.log(stringifiedNewPayLoad);
-
-    if (invalidForm) return;
-
-    api
-      .post(`./recipes/${slug}`, stringifiedNewPayLoad)
-      .then(() => {
-        console.log('New recipe created!');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    hardReset();
-    props.changeFormVisibility();
+  const singleIng = {
+    name: enteredIngName,
+    amount: enteredIngAmount,
+    amountUnit: enteredIngUnit,
+    isGroup: false,
+  };
+  const pushIngredient = () => {
+    setIngredients((prevState) => [...prevState, singleIng]);
+    ingReset();
   };
 
+  const fetchNewRecipe = () => {
+    const addRecipePayLoad = JSON.stringify(postRequestPayLoad);
+    console.log(addRecipePayLoad);
+    hardReset();
+    // api
+    //   .post(`/recipes/${slug}`, addRecipePayLoad)
+    //   .then(() => {
+    //     console.log('Recipe successfully added!');
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+  };
+
+  const invalidIngredients = !validIngAmount || !validIngName || !validIngUnit;
   const invalidForm = !validTitle || !validPrepTime || !validDirections;
 
   return (
     <div className={`${classes.FormBackground} ${props.hidden ? classes.Hidden : ''}`}>
-      <form id="form1" className={classes.FormContent} onSubmit={fetchNewRecipe}>
-        {/* recipe name holder */}
+      <form id="form1" className={classes.FormContent}>
+        {/* recipe name */}
         <div className={`${titleHasError && 'invalid'} ${classes.TitleArea}`}>
           <h2>{enteredTitle.trim() === '' ? 'Napište název receptu' : enteredTitle}</h2>
           <input
@@ -142,7 +149,7 @@ const AddRecipeForm = (props) => {
           />
           {titleHasError && <p className="error-text">Recept musí mít jméno!</p>}
         </div>
-        {/* basic data holder */}
+        {/* basic data */}
         <div className={classes.BasicData}>
           <legend>Základní údaje</legend>
           <div className={prepTimeHasError ? 'invalid' : ''}>
@@ -154,6 +161,7 @@ const AddRecipeForm = (props) => {
               onChange={prepTimeChangeHandler}
               onBlur={prepTimeBlurHandler}
             />
+            {prepTimeHasError && <p className="error-text">Musí být vyplněna doba přípravy!</p>}
           </div>
           <div className={portionsHasError ? 'invalid' : ''}>
             <h5>Počet porcí</h5>
@@ -165,7 +173,7 @@ const AddRecipeForm = (props) => {
               onBlur={portionsBlurHandler}
             />
           </div>
-          <div className={sideDishHasError ? 'invalid' : ''}>
+          <div>
             <h5>Příloha</h5>
             <input
               type="text"
@@ -176,6 +184,16 @@ const AddRecipeForm = (props) => {
           </div>
         </div>
         {/* ingredients holder */}
+        <div className={classes.IngredientsHolder}>
+          <legend>Výpis ingrediencí</legend>
+          {ingredients.map((ing, i) => (
+            <li key={ing._id}>
+              {ing.amount}
+              {ing.amountUnit} {ing.name} <span>&#9851;</span>
+            </li>
+          ))}
+        </div>
+        {/* ingredients */}
         <div className={classes.Ingredients}>
           <legend>Ingredience</legend>
           <h5>Přidat ingredienci</h5>
@@ -201,9 +219,11 @@ const AddRecipeForm = (props) => {
             onChange={ingNameChangeHandler}
             onBlur={ingNameBlurHandler}
           />
-          <button>&#10010; Přidat</button>
+          <button disabled={invalidIngredients} type="button" onClick={pushIngredient}>
+            &#10010; Přidat
+          </button>
         </div>
-        {/* directions holder */}
+        {/* directions */}
         <div className={`${classes.Directions} ${directionsHasError ? 'invalid' : ''}`}>
           <legend>Postup</legend>
           <textarea
@@ -211,7 +231,7 @@ const AddRecipeForm = (props) => {
             name=""
             id=""
             cols="30"
-            rows="10"
+            rows="15"
             placeholder="Zadejte postup"
             value={enteredDirections}
             onChange={directionsChangeHandler}
@@ -221,10 +241,11 @@ const AddRecipeForm = (props) => {
         </div>
         {/* submit button */}
         <input
-          type="submit"
+          type="button"
           value="&#9745; Uložit"
           disabled={invalidForm}
           className={classes.Submit}
+          onClick={fetchNewRecipe}
         />
         {/* exit sign that closes the form without saving */}
         <button className={classes.Exit} onClick={props.changeFormVisibility}>

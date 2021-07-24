@@ -20,7 +20,15 @@ export function RecipeDetailPage() {
         setRecipeDetails({ data, error: '', loading: false });
       })
       .catch(() => {
-        setRecipeDetails({ data: {}, error: 'Něco se pokazilo...', loading: false });
+        setRecipeDetails({
+          data: {},
+          error: (
+            <p className={classes.ColourError}>
+              Error! <span classes={classes.ErrorAnimation}>&#9888;</span>
+            </p>
+          ),
+          loading: false,
+        });
       });
     console.log(data.directions);
   }, [slug, data.directions]);
@@ -33,7 +41,18 @@ export function RecipeDetailPage() {
     return error;
   }
 
-  const transformedDirections = data.directions.split('\n');
+  const deleteRecipeHandler = () => {
+    api
+      .delete(`/recipes/${slug}`)
+      .then(() => {
+        console.log('Success!!!');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const transformedDirections = data.directions?.split('\n');
 
   return (
     <>
@@ -43,7 +62,7 @@ export function RecipeDetailPage() {
       <span>
         Ingredience:{' '}
         <ul>
-          {data.ingredients.map((ing) => (
+          {data.ingredients?.map((ing) => (
             <li key={ing._id}>
               {ing.name} {ing.amount}
               {ing.amountUnit && ing.amountUnit.length > 2 ? ` ${ing.amountUnit}` : ing.amountUnit}
@@ -53,10 +72,12 @@ export function RecipeDetailPage() {
       </span>
       <div>
         Postup:{' '}
-        {transformedDirections.map((dir) => {
+        {transformedDirections?.map((dir) => {
           return <p>{dir}</p>;
         })}
       </div>
+      <button>Upravit &#10000;</button>
+      <button onClick={deleteRecipeHandler}>Smazat &#10005;</button>
     </>
   );
 }
