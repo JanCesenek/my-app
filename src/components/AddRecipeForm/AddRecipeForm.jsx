@@ -95,8 +95,14 @@ const AddRecipeForm = (props) => {
     resetIngName();
   };
 
+  const completeReset = () => {
+    hardReset();
+    ingReset();
+    setIngredients([]);
+  };
+
   const slug = slugify(enteredTitle);
-  /** */
+  /* default recipe data to be sent to the database */
   const postRequestPayLoad = {
     title: enteredTitle,
     preparationTime: enteredPrepTime,
@@ -118,17 +124,32 @@ const AddRecipeForm = (props) => {
     ingReset();
   };
 
-  const fetchNewRecipe = () => {
-    const addRecipePayLoad = JSON.stringify(postRequestPayLoad);
-    console.log(addRecipePayLoad);
+  const addRecipeHandler = (event) => {
+    event.preventDefault();
+    console.log(postRequestPayLoad);
     api
-      .post('/recipes', addRecipePayLoad)
-      .then(() => {
+      .post('/recipes', postRequestPayLoad)
+      .then((res) => {
+        console.log(res);
         console.log('Recipe successfully added!');
       })
       .catch((error) => {
         console.log(error);
       });
+    alert('Recept úspěšně přidán!!! 😉');
+    completeReset();
+    props.formUploaded();
+  };
+
+  const exitForm = () => {
+    completeReset();
+    props.changeFormVisibility();
+  };
+
+  const removeIngredient = function (i) {
+    const newIngredients = [...ingredients];
+    newIngredients.splice(i, 1);
+    setIngredients(newIngredients);
   };
 
   const invalidIngredients = !validIngAmount || !validIngName || !validIngUnit;
@@ -136,7 +157,7 @@ const AddRecipeForm = (props) => {
 
   return (
     <div className={`${classes.FormBackground} ${props.hidden ? classes.Hidden : ''}`}>
-      <form id="form1" className={classes.FormContent} onSubmit={fetchNewRecipe}>
+      <form id="form1" className={classes.FormContent} onSubmit={addRecipeHandler}>
         {/* recipe name */}
         <div className={`${titleHasError && 'invalid'} ${classes.TitleArea}`}>
           <h2>{enteredTitle.trim() === '' ? 'Napište název receptu' : enteredTitle}</h2>
@@ -188,7 +209,7 @@ const AddRecipeForm = (props) => {
           {ingredients.map((ing, i) => (
             <li key={ing._id}>
               {ing.amount}
-              {ing.amountUnit} {ing.name} <span>&#9851;</span>
+              {ing.amountUnit} {ing.name} <span onClick={() => removeIngredient(i)}>&#9851;</span>
             </li>
           ))}
         </div>
@@ -239,16 +260,13 @@ const AddRecipeForm = (props) => {
           {directionsHasError && <p className="error-text">Vyplňte postup!</p>}
         </div>
         {/* submit button */}
-        <input
-          type="submit"
-          value="&#9745; Uložit"
-          disabled={invalidForm}
-          className={classes.Submit}
-        />
-        {/* exit sign that closes the form without saving */}
-        <button className={classes.Exit} onClick={props.changeFormVisibility}>
-          <h1 className={classes.Cross}>&#10005;</h1>
+        <button type="submit" disabled={invalidForm} className={classes.Submit}>
+          &#9745; Uložit
         </button>
+        {/* exit sign that closes the form without saving */}
+        <div className={classes.Exit} onClick={exitForm}>
+          <h1 className={classes.Cross}>&#10005;</h1>
+        </div>
       </form>
     </div>
   );
